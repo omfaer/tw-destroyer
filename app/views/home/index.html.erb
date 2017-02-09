@@ -1,0 +1,12 @@
+<div class="tweets">
+
+  <% @tweets.each do |tw| %>
+    <div>
+      <figure>
+        <% if tw.media.length > 0 %><img src="<%= tw.media.first.media_url %>"><% end %>
+        <figcaption><%= tw.text %></figcaption>
+      </figure>
+    </div>
+  <% end %>
+
+</div>
