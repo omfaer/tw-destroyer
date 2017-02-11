@@ -8,26 +8,46 @@ class HomeController < ApplicationController
   end
 
   def index
-    # @tweets = CLIENT.get_all_tweets("muratbastas")
-    @tweets = CLIENT.user_timeline("muratbastas")
-    # @tweets = CLIENT.status("814919078536212480")
-    # raise @tweets.media.first.media_url
-  end
-
-private
-
-  def collect_with_max_id(collection=[], max_id=nil, &block)
-    response = yield(max_id)
-    collection += response
-    response.empty? ? collection.flatten : collect_with_max_id(collection, response.last.id - 1, &block)
-  end
-
-  def CLIENT.get_all_tweets(user)
-    collect_with_max_id do |max_id|
-      options = {count: 200, include_rts: true}
-      options[:max_id] = max_id unless max_id.nil?
-      user_timeline(user, options)
+    @user = CLIENT.user
+    @tweets = Rails.cache.fetch('muratbastas_s_timeline') do
+      CLIENT.user_timeline(:page => 1, :count => 800)
     end
   end
+
+  def destroy
+
+    begin
+
+      params[:delete].each do |tweet|
+        unless CLIENT.destroy_status(tweet)
+          raise "#{tweet} silinirken sorun oluştu."
+        end
+      end
+
+      render :json => { status: 'success', message: 'Süper' }.to_json
+
+    rescue => e
+
+      render :json => { status: 'error', message: 'Sorun oluştu', error_message: e.message }.to_json
+
+    end
+
+  end
+
+# private
+#
+#   def collect_with_max_id(collection=[], max_id=nil, &block)
+#     response = yield(max_id)
+#     collection += response
+#     response.empty? ? collection.flatten : collect_with_max_id(collection, response.last.id - 1, &block)
+#   end
+#
+#   def CLIENT.get_all_tweets(user)
+#     collect_with_max_id do |max_id|
+#       options = {count: 200, include_rts: true}
+#       options[:max_id] = max_id unless max_id.nil?
+#       user_timeline(user, options)
+#     end
+#   end
 
 end

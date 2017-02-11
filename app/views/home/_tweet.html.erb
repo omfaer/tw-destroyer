@@ -1,0 +1,29 @@
+<div>
+  <%
+  if @tweet.retweeted_tweet?
+    text = @tweet.retweeted_status.text
+  else
+    text = @tweet.text
+  end
+
+  if @tweet.user_mentions.length > 0
+    mentions = @tweet.user_mentions.each do |m|
+      text = text.gsub("@#{m.screen_name}", "<a href='//twitter.com/#{m.screen_name}' target='_blank'>@#{m.screen_name}</a>").html_safe
+    end
+  end
+
+  if @tweet.hashtags.length > 0
+    hashtags = @tweet.hashtags.each do |tag|
+      text = text.gsub("##{tag.text}", "<a href='//twitter.com/hashtag/#{tag.text}' target='_blank'>##{tag.text}</a>").html_safe
+    end
+  end
+  %>
+  <p><%= auto_link(text, :html => { :target => '_blank' }) %></p>
+  <% if @tweet.media.length > 0 %>
+    <% @tweet.media.each do |m| %>
+      <a data-fancybox href="<%= m.media_url %>">
+        <%= image_tag "#{m.media_url}:thumb", class: "img img-thumbnail" %></a>
+    <% end %>
+  <% end %>
+  <%= "Retweeted from <a href='//twitter.com/#{@tweet.retweeted_tweet.user.screen_name}' target='_blank'>@#{@tweet.retweeted_tweet.user.screen_name}</a>".html_safe if @tweet.retweeted_tweet? %>
+</div>

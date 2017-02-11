@@ -14,37 +14,117 @@
  *= require_self
  */
 
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700');
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+$dark: #5e5e5f;
+$blue: #80d4f6;
+$green: #67D5B5;
+$red: #ff7761;
+
 * {
   padding: 0;
   margin: 0;
+  outline: none !important;
 }
 
 body {
-  padding: 30px;
+  padding-top: 80px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+  font-color: $dark;
+}
+
+
+a {
+  color: darken($blue, 20%);
+  &:hover {
+    color: darken($blue, 60%)
+  }
+}
+
+.profile {
+  text-align: center;
+  background: #fafafa;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+
+  .profile-picture {
+    .cover {
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+      overflow: hidden;
+    }
+    > img {
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 3px solid #fff;
+      border-radius: 50%;
+    }
+  }
+
+  .info {
+    padding: 1em;
+  }
+
+  h3 {
+
+  }
 }
 
 .tweets {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
 
   > div {
-    width: 30%;
     padding: 1em;
-    box-shadow: 0px 0px 25px rgba(0,0,0,.2);
-    margin-bottom: 30px;
-  }
-
-  figure {
-    img {
-      display: block;
-      max-width: 100%;
-      width: 100%;
-      height: auto;
-      margin-bottom: 1em;
+    background: #fafafa;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    margin: 0 0 1em 0;
+    transition: all .2s;
+    &.selected {
+      background: transparentize($red, .5);
+      color: #fff;
+      a {
+        color: #fff;
+      }
+    }
+    &:hover {
+      border-color: darken(#fafafa, 5%);
+    }
+    > p:last-child { margin-bottom: 0; }
+    a {
+      font-weight: bold;
     }
   }
+
+  label {
+    cursor: pointer;
+    &:before{
+      display: inline-block;
+      content: "+";
+      margin: 0 10px 0 0;
+      width: 1em;
+      height: 1em;
+      border: 2px solid $red;
+      border-radius: 100%;
+      vertical-align: middle;
+      color: $red;
+      font-size: 18px;
+      text-align: center;
+      line-height: .8em;
+      transition: transform 0.2s ease-in-out;
+    }
+  }
+
+  input[type=checkbox]:checked + label:before{
+    background: $red;
+    color: #fff;
+    transform: rotate(135deg);
+    transform-origin: center center;
+  }
+
+  input[type=checkbox] { display: none; }
 
 }

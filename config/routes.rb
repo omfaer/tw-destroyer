@@ -1,3 +1,5 @@
 Rails.application.routes.draw do
-  get 'home/index'
+  root 'home#index'
+
+  post 'destroy', to: 'home#destroy'
 end

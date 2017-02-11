@@ -1,12 +1,94 @@
-<div class="tweets">
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
 
-  <% @tweets.each do |tw| %>
-    <div>
-      <figure>
-        <% if tw.media.length > 0 %><img src="<%= tw.media.first.media_url %>"><% end %>
-        <figcaption><%= tw.text %></figcaption>
-      </figure>
+      <div class="profile">
+
+        <div class="profile-picture">
+          <div class="cover"><%= image_tag @user.profile_banner_url, class: 'img-responsive' %></div>
+          <%= image_tag @user.profile_image_url, class: 'img-responsive' %>
+        </div>
+
+        <div class="info">
+          <h3><a href="/">@<%= @user.username %></a></h3>
+          <p><%= @user.description %></p>
+        </div>
+
+      </div>
+
     </div>
-  <% end %>
 
+    <div class="col-md-9">
+
+      <form action="" id="tweets-form">
+
+        <div class="tweets">
+
+          <%
+          @tweets.each do |tw|
+          %>
+            <div>
+              <%
+              if tw.retweeted_tweet?
+                text = tw.retweeted_status.text
+              else
+                text = tw.text
+              end
+
+              if tw.user_mentions.length > 0
+                mentions = tw.user_mentions.each do |m|
+                  text = text.gsub("@#{m.screen_name}", "<a href='//twitter.com/#{m.screen_name}' target='_blank'>@#{m.screen_name}</a>").html_safe
+                end
+              end
+
+              if tw.hashtags.length > 0
+                hashtags = tw.hashtags.each do |tag|
+                  text = text.gsub("##{tag.text}", "<a href='//twitter.com/hashtag/#{tag.text}' target='_blank'>##{tag.text}</a>").html_safe
+                end
+              end
+              %>
+              <p>
+                <input type="checkbox" name="delete[]" id="tw-<%= tw.id %>" value="<%= tw.id %>">
+                <label for="tw-<%= tw.id %>">&nbsp;</label>
+                <%= auto_link(text, :html => { :target => '_blank' }) %>
+              </p>
+              <% if tw.media.length > 0 %>
+                <% tw.media.each do |m| %>
+                  <a data-fancybox href="<%= m.media_url %>">
+                    <%= image_tag "#{m.media_url}:thumb", class: "img img-thumbnail" %></a>
+                <% end %>
+              <% end %>
+              <%= "Retweeted from <a href='//twitter.com/#{tw.retweeted_tweet.user.screen_name}' target='_blank'>@#{tw.retweeted_tweet.user.screen_name}</a>".html_safe if tw.retweeted_tweet? %>
+            </div>
+          <%
+          end
+          %>
+
+        </div>
+
+      </form>
+
+    </div>
+  </div>
 </div>
+
+<ul id="menu" class="mfb-component--br mfb-zoomin" data-mfb-toggle="hover">
+  <li class="mfb-component__wrap">
+    <a href="#" class="mfb-component__button--main">
+      <i class="mfb-component__main-icon--resting ion-plus-round"></i>
+      <i class="mfb-component__main-icon--active ion-close-round"></i>
+    </a>
+    <ul class="mfb-component__list">
+      <li>
+        <a href="#" data-mfb-label="Seçilenleri kalıcı olarak sil" id="delete-tweets-button" class="mfb-component__button--child danger">
+          <i class="mfb-component__child-icon ion-trash-a"></i>
+        </a>
+      </li>
+      <li>
+        <a href="#" data-mfb-label="Yeni tweet yaz" class="mfb-component__button--child success">
+          <i class="mfb-component__child-icon ion-compose"></i>
+        </a>
+      </li>
+    </ul>
+  </li>
+</ul>
