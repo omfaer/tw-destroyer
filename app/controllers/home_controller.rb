@@ -19,8 +19,10 @@ class HomeController < ApplicationController
     begin
 
       params[:delete].each do |tweet|
-        unless CLIENT.destroy_status(tweet)
-          raise "#{tweet} silinirken sorun oluştu."
+        if CLIENT.status(tweet)
+          unless CLIENT.destroy_status(tweet)
+            raise "#{tweet} silinirken sorun oluştu."
+          end
         end
       end
 

@@ -16,7 +16,16 @@ gem 'jbuilder', '~> 2.5'
 
 group :development, :test do
   gem 'byebug', platform: :mri
+
+  # gem 'rspec-rails', '~> 3.5'
 end
+
+# group :test do
+#   gem 'factory_girl_rails', '~> 4.0'
+#   gem 'shoulda-matchers', '~> 3.1'
+#   gem 'database_cleaner'
+#   gem 'faker'
+# end
 
 group :development do
   gem 'web-console', '>= 3.3.0'
@@ -34,16 +43,3 @@ gem "redis-rack-cache"
 gem 'bootstrap-sass', '~> 3.3.6'
 gem 'twitter'
 gem 'rails_autolink'
-gem 'will_paginate'
-
-group :test do
-  gem 'minitest'
-  gem 'minitest-rails'
-
-  gem 'minitest-reporters'
-
-  gem 'factory_girl'
-  gem 'factory_girl_rails'
-  gem 'database_cleaner'
-  gem 'faker'
-end

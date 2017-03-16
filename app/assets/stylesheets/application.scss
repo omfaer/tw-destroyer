@@ -92,6 +92,7 @@ a {
     }
     &:hover {
       border-color: darken(#fafafa, 5%);
+      cursor: pointer;
     }
     > p:last-child { margin-bottom: 0; }
     a {

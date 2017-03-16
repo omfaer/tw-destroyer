@@ -112,27 +112,35 @@ $(function () {
         title: 'Emin misiniz?',
         text: "Bu işlemi onaylarsanız seçtiğiniz tweet'ler teker teker silinecektir!",
         type: 'warning',
+        showLoaderOnConfirm: true,
+        preConfirm: function () {
+          return new Promise(function (resolve, reject) {
+            $.post('/destroy', selecteds, function (result) {
+              if (result.status === 'success') {
+                $('.tweets > div.selected').animate({ 'transform': 'translateX(140px)' }, 600).fadeOut(600);
+                resolve();
+              } else {
+                reject(result.error_message);
+              }
+            });
+          });
+        },
         showCancelButton: true,
         confirmButtonColor: '#ff7761',
         cancelButtonColor: '#aaa',
         confirmButtonText: 'Eminim, sil!'
       }).then(function () {
-        $.post('/destroy', selecteds, function (result) {
-          if (result.status === 'success') {
-            $('.tweets > div.selected').animate({ 'transform': 'translateX(140px)' }, 600).fadeOut(600);
-            swal(
-              'İşleniyor!',
-              'Tweet\'leriniz teker teker silinecektir. Bu işlem biraz zaman alabilir.',
-              'success'
-            );
-          } else {
-            swal(
-              'Oops...',
-              'İşlem sırasında bir sorun oluştu. :(',
-              'error'
-            );
-          }
-        });
+        swal(
+          '🙀',
+          'Tweet\'leriniz teker teker siliniyor. Bu işlem biraz zaman alabilir.',
+          'success'
+        );
+      }, function () {
+        swal(
+          'Oops...',
+          'İşlem sırasında bir sorun oluştu. 😦',
+          'error'
+        );
       });
     }
   });
